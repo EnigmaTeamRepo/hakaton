@@ -2,6 +2,7 @@ package com.enigma.hakaton.controller.rest;
 
 import com.enigma.hakaton.model.User;
 import com.enigma.hakaton.model.enums.UserStatus;
+import com.enigma.hakaton.model.request.ListFromUserStatusRequest;
 import com.enigma.hakaton.model.request.UserIdJsonRequest;
 import com.enigma.hakaton.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/getUsers")
-    public Callable<ResponseEntity<Map<UserStatus, List<User>>>> getAllUsers() {
-        return () -> ok(userService.getAllUsers().stream().collect(groupingBy(User::getUserStatus)));
+    @GetMapping("/getUsersByStatus")
+    public Callable<ResponseEntity<List<User>>> getAllUsersByStatus(@RequestBody ListFromUserStatusRequest request) {
+        return () -> ok(userService.getAllUsers().stream().collect(groupingBy(User::getUserStatus)).get(request.getUserStatus()));
     }
 
     @PostMapping("/approveRegistration")
