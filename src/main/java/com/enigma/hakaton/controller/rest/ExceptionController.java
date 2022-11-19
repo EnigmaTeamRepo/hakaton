@@ -1,11 +1,15 @@
 package com.enigma.hakaton.controller.rest;
 
 import com.enigma.hakaton.exception.LoginAlreadyExistException;
+import com.enigma.hakaton.exception.PasswordNonMatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.internalServerError;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -15,12 +19,18 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> exceptionHandling(Exception e) {
         log.error(e.getLocalizedMessage(), e);
-        return ResponseEntity.internalServerError().build();
+        return internalServerError().build();
     }
 
     @ExceptionHandler(LoginAlreadyExistException.class)
     public ResponseEntity<?> loginAlreadyExistExceptionHandling(LoginAlreadyExistException e) {
         log.error(e.getLocalizedMessage(), e);
-        return ResponseEntity.badRequest().body("User wilt this login already registered");
+        return badRequest().body("User wilt this login already registered");
+    }
+
+    @ExceptionHandler(PasswordNonMatchException.class)
+    public ResponseEntity<?> passwordNonMatchExceptionHandling(PasswordNonMatchException e) {
+        log.error(e.getLocalizedMessage(), e);
+        return badRequest().body("Password non match");
     }
 }

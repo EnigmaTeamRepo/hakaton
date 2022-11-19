@@ -1,26 +1,32 @@
 package com.enigma.hakaton.model;
 
 import com.enigma.hakaton.model.enums.Role;
+import com.enigma.hakaton.model.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "e_user")
 public class User implements UserDetails {
 
+    @Serial
+    private static final long serialVersionUID = 3896064634943267445L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "e_user_seq")
+    @SequenceGenerator(name = "e_user_seq", sequenceName = "e_user_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "login")
+    @Column(name = "login", unique = true, nullable = false)
     private String login;
 
     @Column(name = "password")
@@ -29,6 +35,9 @@ public class User implements UserDetails {
 
     @Column(name = "role")
     private Role role;
+
+    @Column(name = "user_status")
+    private UserStatus userStatus;
 
     @Column(name = "name")
     private String name;
@@ -49,11 +58,7 @@ public class User implements UserDetails {
     @JsonIgnore
     public Boolean locked;
 
-    @Column(name = "blocked")
-    @JsonIgnore
-    public Boolean blocked;
-
-    @OneToMany
+    @OneToMany(targetEntity = Bill.class, fetch = FetchType.EAGER)
     private Set<Bill> bills;
 
     @Transient
@@ -86,7 +91,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !(locked != null && locked);
+        return !(locked != null && locked) && !UserStatus.BLOCKED.equals(userStatus);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !(blocked != null && blocked);
+        return true;
     }
 
     public Long getId() {
@@ -125,6 +130,14 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public UserStatus getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     public String getName() {
@@ -177,14 +190,6 @@ public class User implements UserDetails {
 
     public void setLocked(Boolean locked) {
         this.locked = locked;
-    }
-
-    public Boolean getBlocked() {
-        return blocked;
-    }
-
-    public void setBlocked(Boolean blocked) {
-        this.blocked = blocked;
     }
 
     public Set<Bill> getBills() {
