@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,6 +76,7 @@ public class UserService implements UserDetailsService {
         defaultAdmin.setPassword(bCryptPasswordEncoder.encode(adminPass));
         defaultAdmin.setRole(Role.ADMIN);
         defaultAdmin.setUserStatus(UserStatus.ACTIVE);
+        defaultAdmin.setRegistrationDate(new Date());
         userRepository.save(defaultAdmin);
     }
 

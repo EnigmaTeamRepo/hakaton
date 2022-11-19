@@ -10,12 +10,10 @@ import java.util.Date;
 
 public class ApplicationHelper {
     public static void createDefaultAdmin(ConfigurableApplicationContext context) {
-        UserService userService = context.getBean(UserService.class);
-
         try {
             Method registerDefaultAdmin = UserService.class.getDeclaredMethod("registerDefaultAdmin");
             registerDefaultAdmin.setAccessible(true);
-            registerDefaultAdmin.invoke(userService);
+            registerDefaultAdmin.invoke(context.getBean(UserService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
