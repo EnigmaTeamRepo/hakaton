@@ -74,6 +74,7 @@ public class UserService implements UserDetailsService {
         defaultAdmin.setLogin(adminLogin);
         defaultAdmin.setPassword(bCryptPasswordEncoder.encode(adminPass));
         defaultAdmin.setRole(Role.ADMIN);
+        defaultAdmin.setUserStatus(UserStatus.ACTIVE);
         userRepository.save(defaultAdmin);
     }
 
