@@ -17,7 +17,7 @@ public enum Currency {
         return code;
     }
 
-    public Currency getByCode(Integer code) {
+    public static Currency getByCode(Integer code) {
         for (Currency value : Currency.values()) {
             if (Objects.equals(value.getCode(), code)) {
                 return value;

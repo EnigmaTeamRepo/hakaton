@@ -2,8 +2,6 @@ package com.enigma.hakaton.model;
 
 import com.enigma.hakaton.model.enums.Role;
 import com.enigma.hakaton.model.enums.UserStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,7 +17,6 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Serial
-    @JsonIgnore
     private static final long serialVersionUID = 3896064634943267445L;
 
     @Id
@@ -32,43 +29,24 @@ public class User implements UserDetails {
     private String login;
 
     @Column(name = "password")
-    @JsonIgnore
     private String password;
 
     @Column(name = "role")
     private Role role;
 
     @Column(name = "user_status")
-    @JsonProperty("user_status")
     private UserStatus userStatus;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "patronymic")
-    private String patronymic;
-
-    @Column(name = "last_name")
-    @JsonProperty("last_name")
-    private String lastName;
-
-    @Column(name = "birth_date")
-    @JsonProperty("birth_date")
-    private String birthDate;
-
     @Column(name = "registration_date")
-    @JsonProperty("registration_date")
     private Date registrationDate;
 
     @Column(name = "locked")
-    @JsonIgnore
     public Boolean locked;
 
-    @OneToMany(targetEntity = Bill.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Bill.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Bill> bills;
 
     @Transient
-    @JsonIgnore
     private Set<SimpleGrantedAuthority> authorities;
 
 
@@ -86,31 +64,26 @@ public class User implements UserDetails {
     }
 
     @Override
-    @JsonIgnore
     public String getUsername() {
         return login;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonLocked() {
         return !(locked != null && locked) && !UserStatus.BLOCKED.equals(userStatus);
     }
 
     @Override
-    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
@@ -151,38 +124,6 @@ public class User implements UserDetails {
         this.userStatus = userStatus;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -204,6 +145,9 @@ public class User implements UserDetails {
     }
 
     public Set<Bill> getBills() {
+        if (bills == null) {
+            bills = new HashSet<>();
+        }
         return bills;
     }
 

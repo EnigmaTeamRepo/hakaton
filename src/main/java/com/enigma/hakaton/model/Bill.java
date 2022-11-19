@@ -1,6 +1,8 @@
 package com.enigma.hakaton.model;
 
 import com.enigma.hakaton.model.enums.Currency;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
@@ -15,15 +17,18 @@ public class Bill {
     private Long id;
 
     @Column(name = "bill_number")
+    @JsonProperty("bill_number")
     private String billNumber;
 
     @Column(name = "bill_amount")
+    @JsonProperty("bill_amount")
     private Long billAmount;
 
     @Column(name = "currency")
     private Currency currency;
 
     @ManyToOne(targetEntity = User.class)
+    @JsonIgnore
     private User user;
 
     public Long getId() {
@@ -40,5 +45,29 @@ public class Bill {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getBillNumber() {
+        return billNumber;
+    }
+
+    public void setBillNumber(String billNumber) {
+        this.billNumber = billNumber;
+    }
+
+    public Long getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(Long billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 }

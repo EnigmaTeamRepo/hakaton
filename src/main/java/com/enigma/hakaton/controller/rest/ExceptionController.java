@@ -1,5 +1,6 @@
 package com.enigma.hakaton.controller.rest;
 
+import com.enigma.hakaton.exception.BillAlreadyExistsException;
 import com.enigma.hakaton.exception.LoginAlreadyExistException;
 import com.enigma.hakaton.exception.PasswordNonMatchException;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import static org.springframework.http.ResponseEntity.internalServerError;
 @RestControllerAdvice
 public class ExceptionController {
 
-    private final Logger log = LoggerFactory.getLogger("");
+    private final Logger log = LoggerFactory.getLogger("com.enigma.hakaton.controller.rest");
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> exceptionHandling(Exception e) {
@@ -32,5 +33,11 @@ public class ExceptionController {
     public ResponseEntity<?> passwordNonMatchExceptionHandling(PasswordNonMatchException e) {
         log.error(e.getLocalizedMessage(), e);
         return badRequest().body("Password non match");
+    }
+
+    @ExceptionHandler(BillAlreadyExistsException.class)
+    public ResponseEntity<?> billAlreadyExistsExceptionHandling(BillAlreadyExistsException e) {
+        log.error(e.getLocalizedMessage(), e);
+        return badRequest().body("Bill wilt this currency already exists");
     }
 }
