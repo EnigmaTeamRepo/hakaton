@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/csrf", "/login", "/logout", "/js/**", "/css/**", "/error**").permitAll()
+                .antMatchers("/", "/csrf", "/login", "/logout", "/js/**", "/css/**", "/error**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/login")
                 .and().logout().logoutSuccessUrl("/").permitAll()
