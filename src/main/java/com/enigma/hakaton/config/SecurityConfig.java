@@ -60,12 +60,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/csrf", "/login", "/logout", "/js/**", "/css/**", "/error**", "/img/**",  "/favicon.ico").permitAll()
+                .antMatchers("/", "/csrf", "/login", "/logout", "/js/**", "/css/**", "/error**", "/img/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/login")
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrf().disable();
         http.sessionManagement()
                 .sessionFixation().newSession()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
