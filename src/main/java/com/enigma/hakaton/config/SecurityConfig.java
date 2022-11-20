@@ -1,5 +1,6 @@
 package com.enigma.hakaton.config;
 
+import com.enigma.hakaton.model.User;
 import com.enigma.hakaton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -63,6 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/csrf", "/login", "/logout", "/js/**", "/css/**", "/error**", "/img/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/login")
+                .successHandler((request, response, authentication) -> {
+                    Object principal = authentication.getPrincipal();
+                    if (principal instanceof User) {
+                        User user = (User) principal;
+                        response.getWriter().print(user.getRole().toString());
+                    }
+                })
+                .failureHandler((request, response, exception) -> response.setStatus(401))
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

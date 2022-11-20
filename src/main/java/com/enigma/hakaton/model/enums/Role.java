@@ -2,5 +2,12 @@ package com.enigma.hakaton.model.enums;
 
 public enum Role {
     ADMIN,
-    USER
+    USER;
+
+    @Override
+    public String toString() {
+        return "{" + "\n" +
+                "role: " + this.name() + "\n" +
+                "}";
+    }
 }
