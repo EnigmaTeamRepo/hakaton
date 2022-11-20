@@ -5,10 +5,10 @@ import com.enigma.hakaton.model.Bill;
 import com.enigma.hakaton.model.User;
 import com.enigma.hakaton.model.dto.BillDTO;
 import com.enigma.hakaton.model.enums.Currency;
-import com.enigma.hakaton.repository.BillRepository;
 import com.enigma.hakaton.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -22,6 +22,7 @@ public class BillService {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    @Autowired
     public BillService(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;

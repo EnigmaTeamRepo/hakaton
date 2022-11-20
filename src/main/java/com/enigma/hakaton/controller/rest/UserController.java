@@ -2,8 +2,10 @@ package com.enigma.hakaton.controller.rest;
 
 import com.enigma.hakaton.model.User;
 import com.enigma.hakaton.model.dto.UserDTO;
+import com.enigma.hakaton.model.enums.Currency;
 import com.enigma.hakaton.service.OperationService;
 import com.enigma.hakaton.service.UserService;
+import com.enigma.hakaton.service.ValuteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -24,11 +27,13 @@ public class UserController {
 
     private final UserService userService;
     private final OperationService operationService;
+    private final ValuteService valuteService;
 
     @Autowired
-    public UserController(UserService userService, OperationService operationService) {
+    public UserController(UserService userService, OperationService operationService, ValuteService valuteService) {
         this.userService = userService;
         this.operationService = operationService;
+        this.valuteService = valuteService;
     }
 
     @GetMapping("/profile")
@@ -55,8 +60,25 @@ public class UserController {
         return () -> ok(operationService.getOperationDtoByUserId(user.getId()));
     }
 
+    @GetMapping("/payIn")
+    public Callable<ResponseEntity<?>> payInOperation(@AuthenticationPrincipal User user,
+                                                      @RequestParam("amount") Long amount) {
+        return () -> ok(operationService.payIn(user.getId(), amount));
+    }
+
+    @GetMapping("/payOut")
+    public Callable<ResponseEntity<?>> payOutOperation(@AuthenticationPrincipal User user,
+                                                      @RequestParam("amount") Long amount) {
+        return () -> ok(operationService.payOut(user.getId(), amount));
+    }
+
     @GetMapping("/createNewBill")
     public Callable<ResponseEntity<?>> createNewBill(@RequestParam("code") Integer code) {
         return () -> ok().build();
+    }
+
+    @GetMapping("/valuteRates")
+    public Callable<ResponseEntity<Map<Currency, Map<String, String>>>> getRates() {
+        return () -> ok(valuteService.getValuteRates());
     }
 }

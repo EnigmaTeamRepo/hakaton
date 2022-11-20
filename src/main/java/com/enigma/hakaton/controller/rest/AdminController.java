@@ -1,12 +1,12 @@
 package com.enigma.hakaton.controller.rest;
 
-import com.enigma.hakaton.model.User;
 import com.enigma.hakaton.model.dto.UserDTO;
 import com.enigma.hakaton.model.enums.UserStatus;
 import com.enigma.hakaton.model.request.UserIdJsonRequest;
 import com.enigma.hakaton.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,7 @@ public class AdminController {
 
     private final UserService userService;
 
+    @Autowired
     public AdminController(UserService userService) {
         this.userService = userService;
     }
